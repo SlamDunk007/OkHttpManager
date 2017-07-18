@@ -81,7 +81,7 @@ public class OkHttpEngine {
                             if(o == null){
                                 throw new RuntimeException("parse error");
                             }else{
-                                handleSuccessResult(response, resultCallback);
+                                handleSuccessResult(o, resultCallback);
                             }
                         } catch (Exception e) {
                             handleErrorResult(new ErrorResponse(NetConfig.StatusCode.PARSE_ERROR,e.getMessage(),call),resultCallback);
@@ -103,7 +103,7 @@ public class OkHttpEngine {
      * @param response
      * @param resultCallback
      */
-    private void handleSuccessResult(final Response response, final ResultCallback resultCallback) {
+    private void handleSuccessResult(final Object response, final ResultCallback resultCallback) {
 
         if(resultCallback.mRunOnMainOnThread){
             MainExecutor.getInstance().execute(new Runnable() {

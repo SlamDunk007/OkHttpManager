@@ -10,6 +10,8 @@ import okhttp3.Response;
 
 public abstract class ResultCallback<T> {
 
+    public String DEFAULT_CHARSET = "UTF-8";
+
     public boolean mRunOnMainOnThread = true;
 
     public abstract T parseNetworkResponse(Response response) throws Exception;
