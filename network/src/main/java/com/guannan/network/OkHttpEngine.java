@@ -2,6 +2,7 @@ package com.guannan.network;
 
 import com.guannan.network.bean.ErrorResponse;
 import com.guannan.network.builder.GetBuilder;
+import com.guannan.network.builder.PostBuilder;
 import com.guannan.network.callback.ResultCallback;
 
 import java.io.IOException;
@@ -136,6 +137,10 @@ public class OkHttpEngine {
     public GetBuilder get(){
 
         return new GetBuilder();
+    }
+
+    public PostBuilder post(){
+        return new PostBuilder();
     }
 
 }

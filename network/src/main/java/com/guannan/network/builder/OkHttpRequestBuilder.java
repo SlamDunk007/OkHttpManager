@@ -14,6 +14,8 @@ public abstract class OkHttpRequestBuilder <T extends OkHttpRequestBuilder>{
     protected Object tag;
     protected HashMap<String,String> headerMap;
 
+    protected String PARAMS_ENCODING = "UTF-8";
+
     public T url(String url){
         this.url = url;
         return (T) this;

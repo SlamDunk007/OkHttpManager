@@ -44,4 +44,13 @@ public class ErrorResponse {
     public void setCall(Call call) {
         this.call = call;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorResponse{" +
+                "errorCode=" + errorCode +
+                ", errorMessage='" + errorMessage + '\'' +
+                ", call=" + call +
+                '}';
+    }
 }

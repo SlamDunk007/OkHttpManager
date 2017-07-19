@@ -12,11 +12,11 @@ import okhttp3.Response;
  * 将json串通过gson封装到具体的实体类中
  */
 
-public abstract class GenericListener<T> extends ResultCallback<T> {
+public abstract class GenericCallback<T> extends ResultCallback<T> {
 
     private Type mType = null;
 
-    public GenericListener(){
+    public GenericCallback(){
 
         Type superclass = getClass().getGenericSuperclass();
         if(superclass instanceof ParameterizedType){
