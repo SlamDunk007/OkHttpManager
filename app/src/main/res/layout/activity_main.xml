@@ -17,4 +17,10 @@
         android:onClick="post"
         android:text="post请求"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="postFormFile"
+        android:text="post上传文件"/>
+
 </LinearLayout>

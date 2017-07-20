@@ -16,7 +16,6 @@ import okhttp3.RequestBody;
 
 public class PostRequest extends OkHttpRequest {
 
-    private static final MediaType DEFAULT_MEDIATYPE = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8");
     private String mContent;
     private MediaType mMediaType;
 

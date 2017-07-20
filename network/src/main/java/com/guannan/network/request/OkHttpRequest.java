@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Headers;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -20,6 +21,7 @@ public abstract class OkHttpRequest {
     private String url;
     private Object tag;
     private HashMap<String, String> headersMap;
+    protected static final MediaType DEFAULT_MEDIATYPE = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8");
 
     protected Request.Builder builder = new Request.Builder();
 
@@ -68,6 +70,11 @@ public abstract class OkHttpRequest {
         return requestBody;
     }
 
+    /**
+     * 获取包装好的request对象
+     * @param resultCallback
+     * @return
+     */
     public Request generateRequest(ResultCallback resultCallback){
         RequestBody requestBody = buildRequestBody();
         RequestBody wrapBody = wrapBody(requestBody, resultCallback);
