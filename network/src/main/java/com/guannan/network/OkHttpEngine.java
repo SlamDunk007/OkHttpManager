@@ -1,8 +1,11 @@
 package com.guannan.network;
 
+import android.util.Log;
+
 import com.guannan.network.bean.ErrorResponse;
 import com.guannan.network.builder.GetBuilder;
 import com.guannan.network.builder.PostBuilder;
+import com.guannan.network.builder.PostFileBuilder;
 import com.guannan.network.builder.PostFormBuilder;
 import com.guannan.network.callback.ResultCallback;
 
@@ -63,6 +66,8 @@ public class OkHttpEngine {
                         handleErrorResult(new ErrorResponse(NetConfig.StatusCode.NET_CALLED,"result is cancelled",call),resultCallback);
                     }else{
                         handleErrorResult(new ErrorResponse(NetConfig.StatusCode.NET_ERROR,e.getMessage(),call),resultCallback);
+                        Log.e("OkHttpEngine",
+                                "OkHttpEngine(OkHttpEngine.java:68)"+e.getMessage());
                     }
                 }
 
@@ -145,6 +150,10 @@ public class OkHttpEngine {
 
     public PostFormBuilder postForm(){
         return new PostFormBuilder();
+    }
+
+    public PostFileBuilder postFile(){
+        return new PostFileBuilder();
     }
 
 }

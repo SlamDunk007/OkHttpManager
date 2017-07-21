@@ -2,13 +2,18 @@ package com.guannan.network.request;
 
 import com.guannan.network.NetConfig;
 import com.guannan.network.OkHttpEngine;
+import com.guannan.network.callback.FileCallback;
 import com.guannan.network.callback.ResultCallback;
+import com.guannan.network.utils.ProgressResponseBody;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by guannan on 2017/7/6.
@@ -58,7 +63,7 @@ public class RequestDelegate {
 
     }
 
-    private Call buildCallback(ResultCallback resultCallback) {
+    private Call buildCallback(final ResultCallback resultCallback) {
 
         Request request = okHttpRequest.generateRequest(resultCallback);
         OkHttpClient tempClient;
@@ -76,8 +81,22 @@ public class RequestDelegate {
             tempClient = OkHttpEngine.getInstance().getOkHttpClient();
         }
 
-        Call call = tempClient.newCall(request);
+        /**
+         * 包装下载文件的响应体
+         */
+        if(resultCallback!=null && resultCallback instanceof FileCallback){
 
-        return call;
+            tempClient = tempClient.newBuilder().addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+
+                    Response response = chain.proceed(chain.request());
+                    return response.newBuilder()
+                            .body(new ProgressResponseBody(response.body(), resultCallback))    //此处的回调子线程当中
+                            .build();
+                }
+            }).build();
+        }
+        return tempClient.newCall(request);
     }
 }

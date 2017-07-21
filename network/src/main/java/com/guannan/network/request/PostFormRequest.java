@@ -1,7 +1,12 @@
 package com.guannan.network.request;
 
 import android.support.annotation.Nullable;
-import android.webkit.MimeTypeMap;
+
+import com.guannan.network.MainExecutor;
+import com.guannan.network.bean.ProgressModel;
+import com.guannan.network.callback.ResultCallback;
+import com.guannan.network.utils.ProgressRequestBody;
+import com.guannan.network.utils.StringUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -52,39 +57,33 @@ public class PostFormRequest extends OkHttpRequest {
         if (mFileParams != null && mFileParams.size() > 0) {
 
             for (Map.Entry<String, File> entry : mFileParams.entrySet()) {
-                RequestBody requestBody = RequestBody.create(MediaType.parse(getMimeType(entry.getValue())), entry.getValue());
+                RequestBody requestBody = RequestBody.create(MediaType.parse(StringUtils.getMimeType(entry.getValue())), entry.getValue());
                 builder.addFormDataPart(entry.getKey(), entry.getValue().getName(), requestBody);
             }
         }
         return builder.build();
     }
 
+    @Override
+    protected RequestBody wrapBody(RequestBody requestBody, final ResultCallback resultCallback) {
 
-    /**
-     * 获取MimeType类型
-     * @param file
-     * @return
-     */
-    public static String getMimeType(File file) {
-        if (file == null) {
-            return null;
+        if(resultCallback == null){
+            return requestBody;
         }
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(getExtension(file));
-    }
+        ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressRequestListener() {
+            @Override
+            public void onRequestListener(final long currentLength, final long contentLength, final boolean done) {
 
-    /**
-     * 获取文件的扩展名
-     *
-     * @param file
-     * @return
-     */
-    private static String getExtension(final File file) {
-        String suffix = "";
-        String name = file.getName();
-        final int idx = name.lastIndexOf(".");
-        if (idx > 0) {
-            suffix = name.substring(idx + 1);
-        }
-        return suffix;
+                MainExecutor.getInstance().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        //上传文件的进度是在UI线程
+                        resultCallback.onResponseProgress(new ProgressModel(currentLength,contentLength,done));
+                    }
+                });
+
+            }
+        });
+        return progressRequestBody;
     }
 }

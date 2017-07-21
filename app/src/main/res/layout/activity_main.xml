@@ -23,4 +23,16 @@
         android:onClick="postFormFile"
         android:text="post上传文件"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="postSingleFile"
+        android:text="post上传单文件"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="downLoad"
+        android:text="下载文件"/>
+
 </LinearLayout>
