@@ -14,20 +14,21 @@ import java.util.Map;
 
 public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder> {
 
-    private Map<String,String> mContentParams;
-    private Map<String,File> mFileParams;
+    private Map<String, String> mContentParams;
+    private Map<String, File> mFileParams;
 
     @Override
     public RequestDelegate build() {
-        return new PostFormRequest(url,tag,headerMap,mContentParams,mFileParams).build();
+        return new PostFormRequest(url, tag, headerMap, mContentParams, mFileParams).build();
     }
 
     /**
      * 表单内容
+     *
      * @param contentParams
      * @return
      */
-    public PostFormBuilder contentParams(Map<String,String> contentParams){
+    public PostFormBuilder contentParams(Map<String, String> contentParams) {
 
         this.mContentParams = contentParams;
         return this;
@@ -35,10 +36,11 @@ public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder> {
 
     /**
      * 上传的文件参数
+     *
      * @param fileParams
      * @return
      */
-    public PostFormBuilder fileParams(Map<String,File> fileParams){
+    public PostFormBuilder fileParams(Map<String, File> fileParams) {
 
         this.mFileParams = fileParams;
         return this;

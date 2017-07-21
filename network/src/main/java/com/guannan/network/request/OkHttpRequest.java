@@ -30,7 +30,7 @@ public abstract class OkHttpRequest {
         this.url = url;
         this.tag = tag;
         this.headersMap = headersMap;
-        if(url == null){
+        if (url == null) {
             throw new IllegalArgumentException("url can't be null.");
         }
         initBuilder();
@@ -50,11 +50,11 @@ public abstract class OkHttpRequest {
      */
     private void appendHeaders() {
 
-        if(headersMap!=null && !headersMap.isEmpty()){  //请求集合不为空，且大小不等于零
+        if (headersMap != null && !headersMap.isEmpty()) {  //请求集合不为空，且大小不等于零
 
             Headers.Builder headerBuilder = new Headers.Builder();
 
-            for(Map.Entry<String,String> entry : headersMap.entrySet()){
+            for (Map.Entry<String, String> entry : headersMap.entrySet()) {
 
                 headerBuilder.add(entry.getKey(), entry.getValue());
             }
@@ -66,22 +66,23 @@ public abstract class OkHttpRequest {
 
     protected abstract RequestBody buildRequestBody();
 
-    protected RequestBody wrapBody(RequestBody requestBody, ResultCallback resultCallback){
+    protected RequestBody wrapBody(RequestBody requestBody, ResultCallback resultCallback) {
         return requestBody;
     }
 
     /**
      * 获取包装好的request对象
+     *
      * @param resultCallback
      * @return
      */
-    public Request generateRequest(ResultCallback resultCallback){
+    public Request generateRequest(ResultCallback resultCallback) {
         RequestBody requestBody = buildRequestBody();
         RequestBody wrapBody = wrapBody(requestBody, resultCallback);
         return buildRequest(wrapBody);
     }
 
-    public RequestDelegate build(){
+    public RequestDelegate build() {
         return new RequestDelegate(this);
     }
 

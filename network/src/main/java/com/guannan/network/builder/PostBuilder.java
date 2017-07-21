@@ -21,16 +21,16 @@ import okhttp3.MediaType;
 public class PostBuilder extends OkHttpRequestBuilder<PostBuilder> {
 
     private String mContent;
-    private Map<String,String> mParams;
+    private Map<String, String> mParams;
     private MediaType mMediaType;
 
     @Override
     public RequestDelegate build() {
         getBodyContent();
-        return new PostRequest(url,tag,headerMap,mContent,mMediaType).build();
+        return new PostRequest(url, tag, headerMap, mContent, mMediaType).build();
     }
 
-    public PostBuilder content(String content){
+    public PostBuilder content(String content) {
 
         this.mContent = content;
         return this;
@@ -38,10 +38,11 @@ public class PostBuilder extends OkHttpRequestBuilder<PostBuilder> {
 
     /**
      * 添加post请求参数集合
+     *
      * @param params
      * @return
      */
-    public PostBuilder params(HashMap<String,String> params){
+    public PostBuilder params(HashMap<String, String> params) {
 
         this.mParams = params;
         return this;
@@ -49,12 +50,13 @@ public class PostBuilder extends OkHttpRequestBuilder<PostBuilder> {
 
     /**
      * 添加post请求参数，以键值对的形式
+     *
      * @param key
      * @param val
      * @return
      */
-    public PostBuilder addParam(String key, String val){
-        if(this.mParams == null){
+    public PostBuilder addParam(String key, String val) {
+        if (this.mParams == null) {
             this.mParams = new LinkedHashMap<>();
         }
         this.mParams.put(key, val);
@@ -63,10 +65,11 @@ public class PostBuilder extends OkHttpRequestBuilder<PostBuilder> {
 
     /**
      * post上传的内容的类型
+     *
      * @param mediaType
      * @return
      */
-    public PostBuilder mediaType(MediaType mediaType){
+    public PostBuilder mediaType(MediaType mediaType) {
         this.mMediaType = mediaType;
         return this;
     }
@@ -74,14 +77,14 @@ public class PostBuilder extends OkHttpRequestBuilder<PostBuilder> {
     /**
      * 拼接post请求的参数
      */
-    private void getBodyContent(){
+    private void getBodyContent() {
         try {
-            if(mParams !=null && mParams.size()>0){
+            if (mParams != null && mParams.size() > 0) {
 
                 StringBuilder sb = new StringBuilder();
                 for (Map.Entry<String, String> entry : mParams.entrySet()) {
 
-                    if( TextUtils.isEmpty(entry.getKey()) || TextUtils.isEmpty(entry.getValue())){
+                    if (TextUtils.isEmpty(entry.getKey()) || TextUtils.isEmpty(entry.getValue())) {
                         continue;
                     }
                     sb.append(URLEncoder.encode(entry.getKey(), PARAMS_ENCODING))

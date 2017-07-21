@@ -25,10 +25,11 @@ public class ProgressResponseBody extends ResponseBody {
 
     /**
      * 构造函数，赋值
-     * @param responseBody  待包装的响应体
-     * @param resultCallback   回调接口
+     *
+     * @param responseBody   待包装的响应体
+     * @param resultCallback 回调接口
      */
-    public ProgressResponseBody(ResponseBody responseBody, ResultCallback resultCallback){
+    public ProgressResponseBody(ResponseBody responseBody, ResultCallback resultCallback) {
 
         this.mResponseBody = responseBody;
         this.mResultCallback = resultCallback;
@@ -36,6 +37,7 @@ public class ProgressResponseBody extends ResponseBody {
 
     /**
      * 重写调用实际的响应体的contentType
+     *
      * @return
      */
     @Override
@@ -45,6 +47,7 @@ public class ProgressResponseBody extends ResponseBody {
 
     /**
      * 重写调用实际的响应体的contentLength
+     *
      * @return
      */
     @Override
@@ -54,12 +57,13 @@ public class ProgressResponseBody extends ResponseBody {
 
     /**
      * 重写进行包装source
+     *
      * @return
      */
     @Override
     public BufferedSource source() {
 
-        if(mBufferedSource == null){
+        if (mBufferedSource == null) {
             mBufferedSource = Okio.buffer(source(mResponseBody.source()));
         }
         return mBufferedSource;
@@ -68,6 +72,7 @@ public class ProgressResponseBody extends ResponseBody {
 
     /**
      * 读取，回调进度接口
+     *
      * @param source Source
      * @return Source
      */
@@ -76,12 +81,14 @@ public class ProgressResponseBody extends ResponseBody {
         return new ForwardingSource(source) {
             //当前读取字节数
             long totalBytesRead = 0L;
-            @Override public long read(Buffer sink, long byteCount) throws IOException {
+
+            @Override
+            public long read(Buffer sink, long byteCount) throws IOException {
                 long bytesRead = super.read(sink, byteCount);
                 //增加当前读取的字节数，如果读取完成了bytesRead会返回-1
                 totalBytesRead += bytesRead != -1 ? bytesRead : 0;
                 //回调，如果contentLength()不知道长度，会返回-1
-                mResultCallback.onResponseProgress(new ProgressModel(totalBytesRead,contentLength(),bytesRead == -1));
+                mResultCallback.onResponseProgress(new ProgressModel(totalBytesRead, contentLength(), bytesRead == -1));
                 return bytesRead;
             }
         };

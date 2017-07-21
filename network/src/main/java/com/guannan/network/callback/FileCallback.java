@@ -27,8 +27,7 @@ public abstract class FileCallback extends ResultCallback<File> {
         return saveFile(response);
     }
 
-    public File saveFile(Response response) throws IOException
-    {
+    public File saveFile(Response response) throws IOException {
         InputStream is = null;
         byte[] buf = new byte[1024];
         int len = 0;
@@ -50,10 +49,12 @@ public abstract class FileCallback extends ResultCallback<File> {
             try {
                 response.body().close();
                 if (is != null) is.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
             try {
                 if (fos != null) fos.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
     }
 }

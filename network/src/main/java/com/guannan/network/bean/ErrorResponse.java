@@ -14,7 +14,7 @@ public class ErrorResponse {
 
     public Call call;
 
-    public ErrorResponse(int errorCode,String errorMessage,Call call){
+    public ErrorResponse(int errorCode, String errorMessage, Call call) {
 
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;

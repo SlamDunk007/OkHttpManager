@@ -37,13 +37,13 @@ public class PostFileRequest extends OkHttpRequest {
     @Override
     protected RequestBody buildRequestBody() {
 
-        return RequestBody.create(mMediaType,mFile);
+        return RequestBody.create(mMediaType, mFile);
     }
 
     @Override
     protected RequestBody wrapBody(RequestBody requestBody, final ResultCallback resultCallback) {
 
-        if(resultCallback == null){
+        if (resultCallback == null) {
             return requestBody;
         }
 
@@ -55,7 +55,7 @@ public class PostFileRequest extends OkHttpRequest {
                     @Override
                     public void run() {
                         //上传加载的进度是在UI线程
-                        resultCallback.onResponseProgress(new ProgressModel(currentLength,contentLength,done));
+                        resultCallback.onResponseProgress(new ProgressModel(currentLength, contentLength, done));
                     }
                 });
             }

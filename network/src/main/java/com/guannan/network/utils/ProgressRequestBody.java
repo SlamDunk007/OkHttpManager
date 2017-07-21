@@ -54,28 +54,25 @@ public class ProgressRequestBody extends RequestBody {
         bufferedSink.flush();
     }
 
-    protected final class CountingSink extends ForwardingSink
-    {
+    protected final class CountingSink extends ForwardingSink {
         //当前写入字节数
         long bytesWritten = 0L;
         //总字节长度，避免多次调用contentLength()方法
         long contentLength = 0L;
 
-        public CountingSink(Sink delegate)
-        {
+        public CountingSink(Sink delegate) {
             super(delegate);
         }
 
         @Override
-        public void write(Buffer source, long byteCount) throws IOException
-        {
+        public void write(Buffer source, long byteCount) throws IOException {
             super.write(source, byteCount);
             if (contentLength == 0) {
                 //获得contentLength的值，后续不再调用
                 contentLength = contentLength();
             }
             bytesWritten += byteCount;
-            mRequestListener.onRequestListener(bytesWritten, contentLength(),bytesWritten == contentLength);
+            mRequestListener.onRequestListener(bytesWritten, contentLength(), bytesWritten == contentLength);
         }
 
     }

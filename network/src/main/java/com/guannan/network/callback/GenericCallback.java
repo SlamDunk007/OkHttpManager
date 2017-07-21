@@ -16,10 +16,10 @@ public abstract class GenericCallback<T> extends ResultCallback<T> {
 
     private Type mType = null;
 
-    public GenericCallback(){
+    public GenericCallback() {
 
         Type superclass = getClass().getGenericSuperclass();
-        if(superclass instanceof ParameterizedType){
+        if (superclass instanceof ParameterizedType) {
 
             ParameterizedType type = (ParameterizedType) superclass;
             Type[] actualTypeArguments = type.getActualTypeArguments();
@@ -32,7 +32,7 @@ public abstract class GenericCallback<T> extends ResultCallback<T> {
 
         Gson gson = new Gson();
         byte[] bytes = response.body().bytes();
-        String result = new String(bytes,DEFAULT_CHARSET);
+        String result = new String(bytes, DEFAULT_CHARSET);
         Object o = gson.fromJson(result, mType);
         return (T) o;
     }

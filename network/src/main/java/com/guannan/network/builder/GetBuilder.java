@@ -7,11 +7,11 @@ import com.guannan.network.request.RequestDelegate;
  * Created by guannan on 2017/7/6.
  */
 
-public class GetBuilder extends OkHttpRequestBuilder <GetBuilder> {
+public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> {
     @Override
     public RequestDelegate build() {
 
-        return new GetRequest(url, tag,headerMap).build();
+        return new GetRequest(url, tag, headerMap).build();
     }
 
 }

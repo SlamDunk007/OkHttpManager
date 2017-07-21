@@ -67,7 +67,7 @@ public class PostFormRequest extends OkHttpRequest {
     @Override
     protected RequestBody wrapBody(RequestBody requestBody, final ResultCallback resultCallback) {
 
-        if(resultCallback == null){
+        if (resultCallback == null) {
             return requestBody;
         }
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressRequestListener() {
@@ -78,7 +78,7 @@ public class PostFormRequest extends OkHttpRequest {
                     @Override
                     public void run() {
                         //上传文件的进度是在UI线程
-                        resultCallback.onResponseProgress(new ProgressModel(currentLength,contentLength,done));
+                        resultCallback.onResponseProgress(new ProgressModel(currentLength, contentLength, done));
                     }
                 });
 

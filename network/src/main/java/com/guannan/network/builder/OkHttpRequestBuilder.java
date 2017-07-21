@@ -8,26 +8,26 @@ import java.util.HashMap;
  * Created by guannan on 2017/7/6.
  */
 
-public abstract class OkHttpRequestBuilder <T extends OkHttpRequestBuilder>{
+public abstract class OkHttpRequestBuilder<T extends OkHttpRequestBuilder> {
 
     protected String url;
     protected Object tag;
-    protected HashMap<String,String> headerMap;
+    protected HashMap<String, String> headerMap;
 
     protected String PARAMS_ENCODING = "UTF-8";
 
-    public T url(String url){
+    public T url(String url) {
         this.url = url;
         return (T) this;
     }
 
-    public T tag(Object tag){
+    public T tag(Object tag) {
 
         this.tag = tag;
         return (T) this;
     }
 
-    public T headers(HashMap<String,String> map){
+    public T headers(HashMap<String, String> map) {
 
         this.headerMap = map;
         return (T) this;

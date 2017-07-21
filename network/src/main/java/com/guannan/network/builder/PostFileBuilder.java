@@ -27,11 +27,12 @@ public class PostFileBuilder extends OkHttpRequestBuilder<PostFileBuilder> {
                 mMediaType = MEDIA_TYPE_STREAM;
             }
         }
-        return new PostFileRequest(url,tag,headerMap,mFile,mMediaType).build();
+        return new PostFileRequest(url, tag, headerMap, mFile, mMediaType).build();
     }
 
     /**
      * 要上传的文件
+     *
      * @param file
      * @return
      */
@@ -45,6 +46,7 @@ public class PostFileBuilder extends OkHttpRequestBuilder<PostFileBuilder> {
 
     /**
      * 要上传的文件的MIME类型
+     *
      * @param mediaType
      * @return
      */
