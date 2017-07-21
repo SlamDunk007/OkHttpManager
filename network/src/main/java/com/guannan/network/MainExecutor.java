@@ -12,14 +12,15 @@ import java.util.concurrent.Executor;
 
 public class MainExecutor implements Executor {
 
-    private MainExecutor(){}
+    private MainExecutor() {
+    }
 
-    private static class Holder{
+    private static class Holder {
 
         private static final MainExecutor mainExecutor = new MainExecutor();
     }
 
-    public static MainExecutor getInstance(){
+    public static MainExecutor getInstance() {
         return Holder.mainExecutor;
     }
 
