@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.guannan.network.NetManager;
 import com.guannan.network.OkHttpEngine;
 import com.guannan.network.bean.ErrorResponse;
 import com.guannan.network.bean.ProgressModel;
+import com.guannan.network.bean.RequestBean;
 import com.guannan.network.callback.FileCallback;
 import com.guannan.network.callback.GenericCallback;
 import com.guannan.network.callback.StringCallback;
@@ -20,7 +22,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String path = Environment.getExternalStorageDirectory().getPath()+"/james.jpg";
+    private String path = Environment.getExternalStorageDirectory().getPath() + "/james.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,42 +33,39 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * get请求
+     *
      * @param view
      */
-    public void get(View view){
+    public void get(View view) {
 
-        OkHttpEngine.getInstance()
-                .get()
-                .url("http://www.baidu.com")
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(ErrorResponse errorResponse) {
+        RequestBean requestBean = new RequestBean();
+        requestBean.url = "https://www.baidu.com";  //okhttp默认支持https
+        NetManager.getInstance().performGetRequest(requestBean, new StringCallback() {
+            @Override
+            public void onError(ErrorResponse errorResponse) {
+                Toast.makeText(MainActivity.this, "获取失败" + errorResponse.toString(), Toast.LENGTH_SHORT).show();
+            }
 
-                        Toast.makeText(MainActivity.this,"获取失败"+errorResponse.toString(),Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-
-                        Toast.makeText(MainActivity.this,"获取成功"+response,Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onSuccess(String response) {
+                Toast.makeText(MainActivity.this, "获取成功" + response, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void post(View view){
+    public void post(View view) {
 
         postData(new GenericCallback<Result>() {
             @Override
             public void onError(ErrorResponse errorResponse) {
 
-                Toast.makeText(MainActivity.this,"获取失败"+errorResponse.toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "获取失败" + errorResponse.toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSuccess(Result response) {
 
-                Toast.makeText(MainActivity.this, response.getStatus()+response.getInfo(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, response.getStatus() + response.getInfo(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -74,112 +73,118 @@ public class MainActivity extends AppCompatActivity {
     /**
      * post请求，上传字符串
      */
-    public void postData(GenericCallback<Result> listener){
+    public void postData(GenericCallback<Result> listener) {
 
-        HashMap<String, String> paramsMap = new HashMap<>();
-        paramsMap.put("content", "测试数据");
-        OkHttpEngine.getInstance()
-                .post()
-                .url("http://dev.ggt.sina.com.cn/Suggest/add?ggtToken=1a2s3d4f5g6h")
-                .params(paramsMap)
-                .build()
-                .execute(listener);
+        RequestBean requestBean = new RequestBean();
+        HashMap<String, String> urlParmas = new HashMap<>();
+        urlParmas.put("ggtToken", "1a2s3d4f5g6h");
+        HashMap<String, String> bodyParams = new HashMap<>();
+        bodyParams.put("content", "测试数据");
+        requestBean.urlParams = urlParmas;
+        requestBean.requestBody = bodyParams;
+        requestBean.url = "http://dev.ggt.sina.com.cn/Suggest/add?";
+        NetManager.getInstance().performPostRequest(requestBean,listener);
     }
 
-    public void postFormFile(View view){
+    /**
+     * 表单上传多文件
+     * @param view
+     */
+    public void postFormFile(View view) {
 
-        HashMap<String, String> paramsMap = new HashMap<>();
-        paramsMap.put("content", "测试数据");
+        RequestBean requestBean = new RequestBean();
+        HashMap<String, String> urlParams = new HashMap<>();
+        urlParams.put("ggtToken", "1a2s3d4f5g6h");
+        HashMap<String, String> bodyParams = new HashMap<>();
+        bodyParams.put("content", "测试数据");
         HashMap<String, File> fileMap = new HashMap<>();
         fileMap.put("file[]", new File(path));
-        OkHttpEngine.getInstance()
-                .postForm()
-                .url("http://dev.ggt.sina.com.cn/Suggest/add?ggtToken=1a2s3d4f5g6h")
-                .contentParams(paramsMap)
-                .fileParams(fileMap)
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(ErrorResponse errorResponse) {
-                        String s = errorResponse.toString();
-                    }
+        requestBean.url="http://dev.ggt.sina.com.cn/Suggest/add";
+        requestBean.urlParams = urlParams;
+        requestBean.requestBody = bodyParams;
+        requestBean.mContentFiles = fileMap;
+        NetManager.getInstance().performMultiFileRequest(requestBean, new StringCallback() {
+            @Override
+            public void onError(ErrorResponse errorResponse) {
+                Toast.makeText(MainActivity.this, "上传失败" + errorResponse.toString(), Toast.LENGTH_SHORT).show();
+            }
 
-                    @Override
-                    public void onSuccess(String response) {
+            @Override
+            public void onSuccess(String response) {
+                Toast.makeText(MainActivity.this, "上传成功" + response.toString(), Toast.LENGTH_SHORT).show();
+            }
 
-                        Toast.makeText(MainActivity.this,"上传成功"+response.toString(),Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onResponseProgress(ProgressModel progressModel) {
-
-                        Log.e("MainActivity",
-                                "MainActivity(MainActivity.java:115)"+progressModel.getCurrentBytes()+Thread.currentThread().getName());
-                    }
-                });
+            @Override
+            public void onResponseProgress(ProgressModel progressModel) {
+                Log.e("MainActivity",
+                        "MainActivity(MainActivity.java:120)" + progressModel.getCurrentBytes() + Thread.currentThread().getName());
+            }
+        });
     }
 
     /**
      * 上传单文件
+     *
      * @param view
      */
-    public void postSingleFile(View view){
+    public void postSingleFile(View view) {
 
-        OkHttpEngine.getInstance()
-                .postFile()
-                .url("https://api.ggt.sina.com.cn/Acount/uploadFaceImg?ggtToken=1a2b3c4d5e6f7g8h9i0j")
-                .fileParams(new File(path))
-                .build()
-                .execute(new StringCallback() {
-                    @Override
-                    public void onError(ErrorResponse errorResponse) {
-                        Log.e("MainActivity",
-                                "MainActivity(MainActivity.java:133)"+errorResponse.getErrorMessage());
-                    }
+        RequestBean requestBean = new RequestBean();
+        HashMap<String, String> urlParams = new HashMap<>();
+        urlParams.put("ggtToken", "1a2b3c4d5e6f7g8h9i0j");
+        requestBean.url = "https://api.ggt.sina.com.cn/Acount/uploadFaceImg?";
+        requestBean.urlParams = urlParams;
+        requestBean.mFile = new File(path);
+        NetManager.getInstance().performFileRequest(requestBean, new StringCallback() {
+            @Override
+            public void onError(ErrorResponse errorResponse) {
+                Log.e("MainActivity",
+                        "MainActivity(MainActivity.java:141)"+errorResponse.getErrorMessage());
+            }
 
-                    @Override
-                    public void onSuccess(String response) {
-                        Toast.makeText(MainActivity.this,"上传成功"+response.toString(),Toast.LENGTH_SHORT).show();
-                    }
+            @Override
+            public void onSuccess(String response) {
+                Toast.makeText(MainActivity.this, "上传成功" + response.toString(), Toast.LENGTH_SHORT).show();
+            }
 
-                    @Override
-                    public void onResponseProgress(ProgressModel progressModel) {
-
-                        Log.e("MainActivity",
-                                "MainActivity(MainActivity.java:145)"+progressModel.getCurrentBytes()+"总共："+progressModel.getContentLength());
-                    }
-                });
+            @Override
+            public void onResponseProgress(ProgressModel progressModel) {
+                Log.e("MainActivity",
+                        "MainActivity(MainActivity.java:152)"+ progressModel.getCurrentBytes() + "总共：" + progressModel.getContentLength());
+            }
+        });
     }
 
     /**
      * 文件下载
+     *
      * @param view
      */
-    public void downLoad(View view){
+    public void downLoad(View view) {
 
         downLoadFile(new FileCallback() {
             @Override
             public void onError(ErrorResponse errorResponse) {
 
                 Log.e("MainActivity",
-                        "MainActivity(MainActivity.java:161)"+errorResponse.getErrorMessage()+" "+errorResponse.getErrorCode());
+                        "MainActivity(MainActivity.java:161)" + errorResponse.getErrorMessage() + " " + errorResponse.getErrorCode());
             }
 
             @Override
             public void onSuccess(File response) {
-                Toast.makeText(MainActivity.this,"下载成功"+response.getName(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "下载成功" + response.getName(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponseProgress(ProgressModel progressModel) {
 
                 Log.e("MainActivity",
-                        "MainActivity(MainActivity.java:173)"+progressModel.toString());
+                        "MainActivity(MainActivity.java:173)" + progressModel.toString());
             }
         });
     }
 
-    public void downLoadFile(FileCallback fileCallback){
+    public void downLoadFile(FileCallback fileCallback) {
 
         fileCallback.destFileName = "jamesdownload.jpg";
         fileCallback.destFileDir = Environment.getExternalStorageDirectory().getPath();
